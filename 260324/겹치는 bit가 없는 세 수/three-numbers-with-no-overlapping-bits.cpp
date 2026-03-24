@@ -3,39 +3,35 @@
 using namespace std;
 
 int n;
-
-vector<long long> v;
 vector<long long> arr;
 long long maxVal = 0;
-void func(int cnt,long long sum, int idx){
-    if(cnt==3){
-        int a = 0;
-        for(int i=0;i<v.size();i++){
-            a ^= v[i];
+
+void func(int idx, int cnt, long long sum, long long xr) {
+    if (cnt == 3) {
+        if (sum == xr) {
+            maxVal = max(maxVal, sum);
         }
-        if(a!=sum) return;
-        if(maxVal < sum) {
-            maxVal = sum;
-            return;
-        }
+        return;
     }
-    for(int i=idx;i<=n;i++){
-        v.push_back(arr[i]);
-        func(cnt+1, sum+arr[i], i+1);
-        v.pop_back();
-        func(cnt, sum, i+1);
-    }
+
+    if (idx == n) return;
+
+    // 현재 원소 선택
+    func(idx + 1, cnt + 1, sum + arr[idx], xr ^ arr[idx]);
+
+    // 현재 원소 선택 안 함
+    func(idx + 1, cnt, sum, xr);
 }
 
-int main(){
-    cin>>n;
+int main() {
+    cin >> n;
+    arr.resize(n);
 
-    for(int i=0;i<n;i++){
-        long long temp;
-        cin>>temp;
-        arr.push_back(temp);
+    for (int i = 0; i < n; i++) {
+        cin >> arr[i];
     }
-    func(0, 0, 0);
 
-    cout<<maxVal;
+    func(0, 0, 0, 0);
+
+    cout << maxVal;
 }
